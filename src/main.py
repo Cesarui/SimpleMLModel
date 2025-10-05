@@ -38,13 +38,54 @@ y_test = torch.tensor(y_test, dtype=torch.float32).view(-1, 1)
 # The dtype torch float 32 is "the right kind of float" that Pytorch needs for the math.
 # Then the view reshapes the vector into a column shape since Pytorch expects 2D.
 
-
+# This builds a simple Neural Network
 model = nn.Sequential(
-    nn.Linear(5,10),
-    nn.ReLu(),
-    nn.Linear(10,1),
-    nn.Sigmoid()
+    nn.Linear(2,10), # Takes in 2 inputs and connects them to 10 neurons.
+    nn.ReLU(), # This works as the activation function
+    nn.Linear(10,1), # Takes the 10 neurons and compresses them to one output
+    nn.Sigmoid() # And then the output is either 0 or 1
 )
 
+# This is how we define loss and optimizer
+criterion = nn.MSELoss()
+optimizer = optim.SGD(model.parameters(), lr=0.01) # I learned that 0.01 or 0.001 is good for testing,
+# but can be tweaked accordingly.
 
+# The criterion measures how far our predictions are from the real labels.
+# and the optimizer tells pytorch how to adjust the weights each round, apparently Adam is a popular choice.
+# And lr is the learning rate.
+
+# High learning would overshoot and low would be learning slow but carefully.
+
+# Now comes the step to actually train the model
+for epoch in range(100):
+    optimizer.zero_grad()
+    outputs = model(X_train)
+    loss = criterion(outputs, y_train)
+    loss.backward()
+    optimizer.step()
+    if (epoch+1) % 10 == 0:
+        print(f'Epoch [{epoch+1}/100], Loss: {loss.item():.4f}')
+
+# Each loop is one training Epoch. Which means it passes through all the data at once.
+# The order goes as:
+# 1. Make Predictions
+# 2. Compare with real labels
+# 3. Calculate how wrong it was.
+# 4. Backpropagate. Which means to figure out which weights caused an error.
+# 5. Adjust weights slightly
+# 6. Repeat 100 times
+
+# Testing
+with torch.no_grad():
+    predictions = model(X_test)
+    predicted = (predictions > 0.5).float()
+    accuracy = (predicted == y_test).float().mean()
+    print(f'Accuracy: {accuracy:.4f}')
+# The torch no grad turns off the training so no more computing gradients.
+# predictions, if 0.7 yes, if 0.2 no
+# Compare to actual labels and calculate accuracy.
+
+
+# Some questions i still have for tomorrow:
 
