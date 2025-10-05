@@ -39,6 +39,12 @@ y_test = torch.tensor(y_test, dtype=torch.float32).view(-1, 1)
 # Then the view reshapes the vector into a column shape since Pytorch expects 2D.
 
 
+model = nn.Sequential(
+    nn.Linear(5,10),
+    nn.ReLu(),
+    nn.Linear(10,1),
+    nn.Sigmoid()
+)
 
 
 
