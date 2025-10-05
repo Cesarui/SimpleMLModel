@@ -27,6 +27,18 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 # It basically takes a 0.2 percent out between X and y. Since we have 100 samples
 # we'd have 80% (80 samples) training and 20% (20 samples) testing.
 
+# After we have some data. We need to convert it into Pytorch Tensors. Which is basically their own version
+# of arrays.
+
+X_train = torch.tensor(X_train, dtype=torch.float32)
+y_train = torch.tensor(y_train, dtype=torch.float32).view(-1, 1)
+X_test = torch.tensor(X_test, dtype=torch.float32)
+y_test = torch.tensor(y_test, dtype=torch.float32).view(-1, 1)
+
+# The dtype torch float 32 is "the right kind of float" that Pytorch needs for the math.
+# Then the view reshapes the vector into a column shape since Pytorch expects 2D.
+
+
 
 
 
